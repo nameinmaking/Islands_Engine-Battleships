@@ -62,4 +62,21 @@ defmodule IslandsEngine.Island do
   def overlaps?(existing_island, new_island), do:
     not MapSet.disjoint?(existing_island.coordinates,new_island.coordinates)
 
+  # check if guessed island is a hit/miss
+  def guess(island, coordinate) do
+    case MapSet.member?(island.coordinates, coordinate) do
+      true ->
+        hit_coordinates = MapSet.put(island.hit_coordinates, coordinate)
+        {:hit, %{island | hit_coordinates: hit_coordinates}}
+      false -> :miss
+    end
+  end
+
+  # check if the hit island is forested
+  def forested?(island), do:
+    MapSet.equal?(island.coordinates, island.hit_coordinates)
+
+  # All the valid island types
+  def types(), do: [:atoll, :dot, :l_shape, :s_shape, :square]
+
 end
